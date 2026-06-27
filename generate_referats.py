@@ -8,6 +8,7 @@ from docx.oxml.ns import qn
 import os
 
 STUDENT = "Абулашвили Рамзес Тристанович"
+GROUP = "ПИ-Б24-1"
 SUPERVISOR = "доцент, к.и.н. Арапов С.В."
 YEAR = "2026"
 OUTPUT_DIR = "/workspace/referats"
@@ -59,7 +60,7 @@ def add_title_page(doc, discipline, topic):
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("Подготовили:", WD_ALIGN_PARAGRAPH.LEFT, 14, False),
-        ("студенты гр. ……..", WD_ALIGN_PARAGRAPH.LEFT, 14, False),
+        (f"студенты гр. {GROUP}", WD_ALIGN_PARAGRAPH.LEFT, 14, False),
         (STUDENT, WD_ALIGN_PARAGRAPH.LEFT, 14, False),
         (f"Проверил:  {SUPERVISOR}", WD_ALIGN_PARAGRAPH.LEFT, 14, False),
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
