@@ -44,7 +44,14 @@ def add_section_title(doc, text):
     return p
 
 
-def add_title_page(doc, discipline, topic):
+def add_title_page(doc, discipline, topic, doc_type="referat"):
+    if doc_type == "task":
+        work_type = "Задача"
+        topic_line = f"Тема: {topic}"
+    else:
+        work_type = "Реферат к зачету"
+        topic_line = f"Тема реферата: {topic}"
+
     for text, align, size, bold in [
         ("Министерство науки и высшего образования РФ", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("Российский государственный гидрометеорологический университет", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
@@ -54,8 +61,8 @@ def add_title_page(doc, discipline, topic):
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         (f'Дисциплина: «{discipline}»', WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
-        ("Реферат к зачету", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
-        (f"Тема реферата: {topic}", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
+        (work_type, WD_ALIGN_PARAGRAPH.CENTER, 14, False),
+        (topic_line, WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
         ("", WD_ALIGN_PARAGRAPH.CENTER, 14, False),
@@ -88,13 +95,14 @@ def setup_document():
     return doc
 
 
-def add_content(doc, sections):
-    add_heading(doc, "Содержание")
-    for title, _ in sections:
-        add_paragraph(doc, title, align=WD_ALIGN_PARAGRAPH.LEFT)
-        p = doc.paragraphs[-1]
-        p.paragraph_format.first_line_indent = Cm(0)
-    doc.add_page_break()
+def add_content(doc, sections, with_toc=True):
+    if with_toc:
+        add_heading(doc, "Содержание")
+        for title, _ in sections:
+            add_paragraph(doc, title, align=WD_ALIGN_PARAGRAPH.LEFT)
+            p = doc.paragraphs[-1]
+            p.paragraph_format.first_line_indent = Cm(0)
+        doc.add_page_break()
 
     for title, paragraphs in sections:
         add_section_title(doc, title)
@@ -102,10 +110,10 @@ def add_content(doc, sections):
             add_paragraph(doc, para)
 
 
-def save_document(discipline, topic, filename, sections):
+def save_document(discipline, topic, filename, sections, doc_type="referat", with_toc=True):
     doc = setup_document()
-    add_title_page(doc, discipline, topic)
-    add_content(doc, sections)
+    add_title_page(doc, discipline, topic, doc_type=doc_type)
+    add_content(doc, sections, with_toc=with_toc)
     path = os.path.join(OUTPUT_DIR, filename)
     doc.save(path)
     return path
